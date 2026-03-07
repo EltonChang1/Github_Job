@@ -1,6 +1,9 @@
+import { useState } from 'react';
 import JobCard from './JobCard';
 
 function JobsList({ jobs, loading, error }) {
+  const [, setRefresh] = useState(0);
+
   if (loading) {
     return <section className="panel">Loading jobs...</section>;
   }
@@ -16,7 +19,11 @@ function JobsList({ jobs, loading, error }) {
   return (
     <section className="jobs-grid">
       {jobs.map((job) => (
-        <JobCard key={job.id} job={job} />
+        <JobCard 
+          key={job.id} 
+          job={job} 
+          onApplied={() => setRefresh(r => r + 1)}
+        />
       ))}
     </section>
   );

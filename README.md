@@ -3,122 +3,132 @@
 This repo now contains a React + Vite starter that mirrors the core structure of the WebDevSimplified GitHub Jobs app:
 
 - Search form (description, location, full-time toggle)
-- Jobs list with reusable job cards
-- Pagination controls
-- Data hook + API service layer (easy to swap)
+# Job Search Tool 🔍
 
-## 1) Run the project
+A modern, full-featured job search application that aggregates Computer Science, Data Science, and Machine Learning job opportunities from multiple sources including Remotive, Arbeitnow, and The Muse.
 
-```bash
-npm install
-npm run dev
+![Job Search Tool](docs/images/search-page.png)
+
+## ✨ Features
+
+### 🌐 Multi-Source Job Aggregation
+- Fetches jobs from **Remotive**, **Arbeitnow**, and **The Muse**
+- Automatic deduplication across sources
+- Smart parallel fetching for faster results
+- Automatic fallback handling
+
+### 🎯 Smart Filtering & Search
+- Category filters: Software Engineering, Data Science, ML/AI
+- Location-based filtering
+- Full-time/contract job type filtering
+- Keyword search across titles and descriptions
+- Advanced sorting: by relevance, date, company, or title
+
+### 📝 Application Tracking
+- Mark jobs as applied with one click
+- Dedicated applied jobs management page
+- View application history with timestamps
+- Remove jobs from applied list
+- Persistent storage using browser localStorage
+
+### 🧹 Quality Assurance
+- Human-readable job descriptions (HTML cleaned, entities decoded)
+- Automatic spam and low-quality job filtering
+- Validation of job data completeness
+- Source attribution for transparency
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js 16+ and npm
+
+### Installation
+
+### Build for Production
+
+## 📁 Project Structure
+
+```
+Github_Job/
+├── src/
+│   ├── components/
+│   │   ├── AppliedJobs.jsx      # Applied jobs management page
+│   │   ├── JobCard.jsx           # Individual job card component
+│   │   ├── JobDetail.jsx         # Full job details view
+│   │   ├── JobsList.jsx          # Job results grid
+│   │   ├── Pagination.jsx        # Page navigation
+│   │   └── SearchForm.jsx        # Search and filter form
+│   ├── hooks/
+│   │   ├── useJobsSearch.js      # Job search state management
+│   │   └── useQueryParams.js     # URL query parameters hook
+│   ├── services/
+│   │   └── githubJobs.js         # Multi-source API integration
+│   ├── utils/
+│   │   └── appliedJobs.js        # localStorage utilities
+│   ├── App.jsx                   # Main app with routing
+│   ├── constants.js              # App configuration
+│   ├── main.jsx                  # React entry point
+│   └── styles.css                # Global styles
+├── docs/
+│   └── images/                   # Documentation screenshots
+├── index.html
+├── package.json
+└── README.md
 ```
 
-Open the local URL shown in the terminal.
+## 🛠️ Technology Stack
 
-## 2) Current structure
+- **Frontend Framework:** React 18.3.1
+- **Build Tool:** Vite 5.4.10
+- **Routing:** React Router DOM 7.13.1
+- **Markdown Rendering:** React Markdown 10.1.0
+- **Styling:** Vanilla CSS
+- **State Management:** React Hooks
+- **Data Persistence:** localStorage API
 
+## 🎨 Key Features in Detail
+
+### Multi-Source Job Aggregation
+The app fetches jobs from multiple APIs simultaneously:
+- **Remotive API** - Remote tech jobs
+- **Arbeitnow API** - International opportunities
+- **The Muse API** - Curated positions
+
+All sources are queried in parallel using `Promise.all()` for optimal performance.
+
+### Smart Category Classification
+Jobs are automatically categorized using keyword detection:
+- **Software Engineering:** developer, engineer, frontend, backend, full stack, DevOps
+- **Data Science:** data scientist, analyst, engineer, SQL, pandas, analytics
+- **Machine Learning:** ML, AI, deep learning, NLP, computer vision, PyTorch
+
+### Human-Readable Descriptions
+Advanced text processing ensures quality:
+- HTML tags stripped from descriptions
+- HTML entities decoded (e.g., `&nbsp;`, `&amp;`)
+- Control characters removed
+- Spam detection and filtering
+- Minimum content length validation
+
+## 📖 Documentation
+
+For detailed usage instructions, see [USERGUIDE.md](USERGUIDE.md).
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📄 License
+
+This project is open source and available under the MIT License.
+
+## 🔗 Links
+
+- [Live Demo](https://github-job-eltonchang.vercel.app) *(Coming soon)*
+- [GitHub Repository](https://github.com/EltonChang1/Github_Job)
+- [Portfolio](https://eltonchang1.github.io)
+
+## 👨‍💻 Author
+
+Created by Elton Chang
 ```
-.
-├─ src/
-│  ├─ components/
-│  │  ├─ JobCard.jsx
-│  │  ├─ JobsList.jsx
-│  │  ├─ Pagination.jsx
-│  │  └─ SearchForm.jsx
-│  ├─ hooks/
-│  │  └─ useJobsSearch.js
-│  ├─ services/
-│  │  └─ githubJobs.js
-│  ├─ App.jsx
-│  ├─ constants.js
-│  ├─ main.jsx
-│  └─ styles.css
-├─ index.html
-├─ package.json
-└─ vite.config.js
-```
-
-## 3) How this maps to the reference app
-
-- `SearchForm` = query + filters UI
-- `useJobsSearch` = request state management (`loading`, `error`, `jobs`)
-- `githubJobs.js` = fetch + transform layer
-- `JobsList` + `JobCard` = result rendering
-- `Pagination` = page transitions
-
-This keeps API logic separate from UI so you can switch providers without rewriting the components.
-
-## 4) Build it out step-by-step
-
-### Step A: API provider (implemented)
-
-The original GitHub Jobs API is deprecated. This skeleton now uses the public Remotive endpoint by default in `src/services/githubJobs.js`:
-
-- `https://remotive.com/api/remote-jobs`
-- `description` search mapped to `search` query param
-- `location` and `fullTimeOnly` filtered client-side after normalization
-- Page slicing handled with `PAGE_SIZE`, returning `hasMore` for pagination controls
-
-If you want stricter parity with a different provider later, keep the same normalized shape and swap only the service logic.
-
-### Step B: Job detail route (implemented ✓)
-
-The app now includes:
-- `react-router-dom` with `BrowserRouter`, route definitions in `App.jsx`
-- `/job/:id` route rendering `JobDetail.jsx`
-- Job cards link to detail page and pass job data via route state
-- Back navigation from detail to search results
-- Styled detail view with description, meta fields, and apply button
-
-### Step C: Markdown rendering (implemented ✓)
-
-Job descriptions now render as rich markdown with:
-- `react-markdown` package installed and integrated
-- `ReactMarkdown` component in `JobDetail.jsx` 
-- Comprehensive markdown styling in `styles.css` (headings, lists, code blocks, links, blockquotes)
-- Safe HTML rendering without XSS vulnerabilities
-- Syntax highlighting-ready pre/code blocks
-
-### Step D: Query-parameter persistence (implemented ✓)
-
-URL sync is now wired up with:
-- New `useQueryParams` hook in `src/hooks/useQueryParams.js`
-- Reads URL params on mount to restore filters and page
-- Writes state changes back to URL with `useSearchParams`
-- Browser back/forward button navigates through search history
-- Users can bookmark and share filtered search results
-
-### Step E: Deploy
-
-```bash
-npm run build
-npm run preview
-```
-
-Deploy `dist/` to Vercel/Netlify. The app will maintain search state across browser history thanks to query params.
-
-### Optional: Further polish
-
-- Add skeleton/loading placeholders for better UX
-- Add error recovery (retry buttons)
-- Implement infinite scroll instead of pagination
-- Add job filters for salary range, experience level
-- Integrate analytics to track popular searches
-
-## 5) Suggested next coding tasks
-
-1. Move inline text labels into constants for i18n readiness.
-2. Add tests for `useJobsSearch` and `SearchForm`.
-3. Add syntax highlighting with `react-syntax-highlighter` for code blocks in job descriptions.
-4. Deploy to Vercel/Netlify and share the link.
-
----
-
-Congrats! You now have a **production-ready job search app** with:
-✓ Real-time API integration (Remotive)
-✓ Advanced search & filtering
-✓ Client-side pagination
-✓ Job detail pages with rich markdown rendering
-✓ URL-synced state with browser history support
-✓ Professional styling

@@ -1,11 +1,27 @@
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
+import { addAppliedJob, isJobApplied } from '../utils/appliedJobs';
 
 function JobDetail() {
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
   const job = location.state?.job;
+  const [applied, setApplied] = useState(false);
+
+  useEffect(() => {
+    if (job) {
+      setApplied(isJobApplied(job.id));
+    }
+  }, [job]);
+
+  const handleApply = () => {
+    if (job) {
+      addAppliedJob(job);
+      setApplied(true);
+    }
+  };
 
   if (!job) {
     return (
@@ -26,8 +42,17 @@ function JobDetail() {
 
       <article className="panel job-detail">
         <header className="job-detail-header">
-          <h1>{job.title}</h1>
-          <p className="company-name">{job.company}</p>
+          <div>
+            <h1>{job.title}</h1>
+            <p className="company-name">{job.company}</p>
+          </div>
+          <button 
+            onClick={handleApply}
+            disabled={applied}
+            className={applied ? 'btn-applied btn-large' : 'btn-primary btn-large'}
+          >
+            {applied ? '✓ Applied' : 'Mark as Applied'}
+          </button>
         </header>
 
         <div className="job-detail-meta">
@@ -37,11 +62,21 @@ function JobDetail() {
           <div className="meta-item">
             <strong>Location:</strong> {job.location || 'Not specified'}
           </div>
+          {job.salary && (
+            <div className="meta-item">
+              <strong>Salary:</strong> {job.salary}
+            </div>
+          )}
+          {job.source && (
+            <div className="meta-item">
+              <strong>Source:</strong> <span className="source-badge">{job.source}</span>
+            </div>
+          )}
         </div>
 
         <div className="job-detail-actions">
           <a href={job.url} target="_blank" rel="noreferrer" className="apply-button">
-            Apply Now →
+            View Job Posting →
           </a>
         </div>
 
@@ -50,6 +85,15 @@ function JobDetail() {
             <h2>Description</h2>
             <div className="markdown-content">
               <ReactMarkdown>{job.description}</ReactMarkdown>
+            </div>
+          </section>
+        )}
+
+        {job.how_to_apply && (
+          <section className="job-description">
+            <h2>How to Apply</h2>
+            <div className="markdown-content">
+              <ReactMarkdown>{job.how_to_apply}</ReactMarkdown>
             </div>
           </section>
         )}
