@@ -120,7 +120,6 @@ This project is open source and available under the MIT License.
 
 ## 🔗 Links
 
-- [Live Demo](https://github-job-eltonchang.vercel.app) *(Coming soon)*
 - [GitHub Repository](https://github.com/EltonChang1/Github_Job)
 - [Portfolio](https://eltonchang1.github.io)
 
