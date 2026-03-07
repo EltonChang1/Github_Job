@@ -1,8 +1,4 @@
-# GitHub Job App Skeleton
 
-This repo now contains a React + Vite starter that mirrors the core structure of the WebDevSimplified GitHub Jobs app:
-
-- Search form (description, location, full-time toggle)
 # Job Search Tool 🔍
 
 A modern, full-featured job search application that aggregates Computer Science, Data Science, and Machine Learning job opportunities from multiple sources including Remotive, Arbeitnow, and The Muse.
